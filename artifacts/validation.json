@@ -1,0 +1,15 @@
+{
+  "queries": 1110,
+  "gallery": 750,
+  "embedding_shape": [
+    1860,
+    512
+  ],
+  "dtype": "float32",
+  "max_norm_error": 1.7881393432617188e-07,
+  "accepted_queries": 1110,
+  "refused_queries": 0,
+  "format_and_cosine_ranking_checks": "passed",
+  "ground_truth_metrics": "unavailable",
+  "environment": "Windows CPU diagnostic run with temporary KMP_DUPLICATE_LIB_OK=TRUE; Docker not tested"
+}

@@ -1,0 +1,16 @@
+.git
+.venv
+.env
+**/__pycache__
+**/node_modules
+**/dist
+images
+artifacts
+tests
+.pytest_cache
+.torch
+.pnpm-store
+dist
+.idea
+.vscode
+*.zip

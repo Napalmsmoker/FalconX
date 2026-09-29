@@ -1,0 +1,49 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [falcon]
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      IMAGES_DIR: /app/images
+      GALLERY_CSV: /app/test_gallery.csv
+      METADATA_CSV: /app/train.csv
+      MODEL_WEIGHTS: /app/weights/resnet18.pth
+      DEVICE: auto
+      BATCH_SIZE: "16"
+    volumes:
+      - type: bind
+        source: ${FALCON_IMAGES_DIR:-./images}
+        target: /app/images
+        read_only: true
+        bind:
+          create_host_path: false
+      - ./train.csv:/app/train.csv:ro
+      - ./test_query.csv:/app/test_query.csv:ro
+      - ./test_gallery.csv:/app/test_gallery.csv:ro
+      - ./artifacts:/app/artifacts
+    networks: [falcon]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30m
+
+networks:
+  falcon:
+    driver: bridge
